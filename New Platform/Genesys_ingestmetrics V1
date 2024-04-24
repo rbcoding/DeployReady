@@ -1,0 +1,36 @@
+import { execution } from '@dynatrace-sdk/automation-utils';
+
+//async function ingestmetrics({ execution_id }) {
+  
+//call Genesys API and send as a metric
+fetch('https://status.mypurecloud.com/api/v2/components.json')
+    .then (response => response.json())
+    .then(data => {
+      console.log(data.page.url);
+      for (let i = 0; i < data.components.length; i++)
+        {
+          var loc = data.components[i].name
+          var stat = data.components[i].status
+          var gstat = 'genesys.components.status,location=APAC ' + '1'
+          if(stat = "operational")
+            {           
+             fetch('https://<tenant URL>/api/v2/metrics/ingest',{
+             method: 'POST',
+             body: gstat,
+             headers: {
+             'Content-Type': 'application/json; charset=utf-8',
+             'Authorization': 'Api-Token <token>',
+             'Content-Type': 'text/plain; charset=utf-8',  
+             },
+             })
+                   // Converting to JSON
+               .then(response => response.json())
+ 
+                    // Displaying results to console
+               .then(json => console.log(json));
+              
+             }//end of if
+            }//end of for loop
+            });
+      
+
